@@ -195,7 +195,9 @@ namespace Microsoft.PowerShell.Commands
             Dbg.Assert(Path != null, "FileName is mandatory parameter");
 
             if (!ShouldProcess(Path))
+            {
                 return;
+            }
 
             StreamWriter sw;
             PathUtils.MasterStreamOpen(
@@ -399,8 +401,7 @@ namespace Microsoft.PowerShell.Commands
         /// <summary>
         /// Begin processing.
         /// </summary>
-        protected override void
-        BeginProcessing()
+        protected override void BeginProcessing()
         {
             CreateStream();
         }
@@ -408,8 +409,7 @@ namespace Microsoft.PowerShell.Commands
         /// <summary>
         /// Process record.
         /// </summary>
-        protected override void
-        ProcessRecord()
+        protected override void ProcessRecord()
         {
             if (_serializer != null)
             {
@@ -421,8 +421,7 @@ namespace Microsoft.PowerShell.Commands
         /// <summary>
         /// End processing.
         /// </summary>
-        protected override void
-        EndProcessing()
+        protected override void EndProcessing()
         {
             if (_serializer != null)
             {
@@ -472,8 +471,7 @@ namespace Microsoft.PowerShell.Commands
             }
         }
 
-        private void
-        CleanUp()
+        private void CleanUp()
         {
             if (_xmlWriter != null)
             {
@@ -500,8 +498,7 @@ namespace Microsoft.PowerShell.Commands
         /// <summary>
         /// Public dispose method.
         /// </summary>
-        public void
-        Dispose()
+        public void Dispose()
         {
             if (_disposed == false)
             {
@@ -529,7 +526,6 @@ namespace Microsoft.PowerShell.Commands
         /// Gets or sets input object which is written Clixml format.
         /// </summary>
         [Parameter(Position = 0, Mandatory = true, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
-        [ValidateNotNull]
         [ValidateNotNullOrEmpty]
         public PSObject[] InputObject { get; set; }
 
@@ -543,8 +539,7 @@ namespace Microsoft.PowerShell.Commands
         /// <summary>
         /// Begin processing.
         /// </summary>
-        protected override void
-        BeginProcessing()
+        protected override void BeginProcessing()
         {
             _stringBuilder = new StringBuilder();
         }
@@ -561,8 +556,7 @@ namespace Microsoft.PowerShell.Commands
         /// <summary>
         /// End processing.
         /// </summary>
-        protected override void
-        EndProcessing()
+        protected override void EndProcessing()
         {
             _importXmlHelper = new ImportXmlHelper(this, _stringBuilder);
             _importXmlHelper.Import();
@@ -589,8 +583,7 @@ namespace Microsoft.PowerShell.Commands
         /// <summary>
         /// Public dispose method.
         /// </summary>
-        public void
-        Dispose()
+        public void Dispose()
         {
             if (_disposed == false)
             {
@@ -898,7 +891,7 @@ namespace Microsoft.PowerShell.Commands
         internal ImportXmlHelper(PSCmdlet cmdlet, StringBuilder stringBuilder)
         {
             _cmdlet = cmdlet;
-            _StringBuilder = stringBuilder;
+            _stringBuilder = stringBuilder;
             CreateStream();
         }
 
@@ -914,7 +907,7 @@ namespace Microsoft.PowerShell.Commands
         /// <summary>
         /// Handle to string builder.
         /// </summary>
-        internal StringBuilder _StringBuilder;
+        internal StringBuilder _stringBuilder;
 
         /// <summary>
         /// XmlReader used to read file or string.
@@ -965,7 +958,7 @@ namespace Microsoft.PowerShell.Commands
 
         internal void CreateStream()
         {
-            _xr = CreateXmlReader(_StringBuilder);
+            _xr = CreateXmlReader(_stringBuilder);
         }
 
         private void CleanUp()
